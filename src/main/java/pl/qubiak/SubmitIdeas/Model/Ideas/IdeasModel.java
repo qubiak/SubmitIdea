@@ -6,8 +6,9 @@ import javax.persistence.Entity;
 public class IdeasModel {
 
     private int id;
-    private String ideas;
+    private String idea;
     private String author;
+    private boolean isAccepted;
 
     public int getId() {
         return id;
@@ -17,12 +18,12 @@ public class IdeasModel {
         this.id = id;
     }
 
-    public String getIdeas() {
-        return ideas;
+    public String getIdea() {
+        return idea;
     }
 
-    public void setIdeas(String ideas) {
-        this.ideas = ideas;
+    public void setIdea(String idea) {
+        this.idea = idea;
     }
 
     public String getAuthor() {
@@ -31,5 +32,13 @@ public class IdeasModel {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
     }
 }
