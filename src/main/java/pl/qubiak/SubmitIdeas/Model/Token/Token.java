@@ -1,19 +1,20 @@
 package pl.qubiak.SubmitIdeas.Model.Token;
 
-import pl.qubiak.SubmitIdeas.Model.Users.UsersModel;
+import pl.qubiak.SubmitIdeas.Model.Users.AppUser;
 
 import javax.persistence.*;
 
 @Entity
-public class TokenModel {
+public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String value;
 
     @OneToOne
-    private UsersModel usersModel;
+    private AppUser appUser;
 
     public Long getId() {
         return id;
@@ -31,11 +32,11 @@ public class TokenModel {
         this.value = value;
     }
 
-    public UsersModel getUsersModel() {
-        return usersModel;
+    public AppUser getAppUser() {
+        return appUser;
     }
 
-    public void setUsersModel(UsersModel usersModel) {
-        this.usersModel = usersModel;
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }
