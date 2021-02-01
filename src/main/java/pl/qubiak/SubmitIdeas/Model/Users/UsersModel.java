@@ -21,6 +21,10 @@ public class UsersModel implements UserDetails {
     private String userPassword;
     private String email;
 
+    public UsersModel() {
+
+    }
+
     public int getId() {
         return id;
     }
