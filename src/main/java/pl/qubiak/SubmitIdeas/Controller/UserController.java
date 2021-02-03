@@ -4,12 +4,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import pl.qubiak.SubmitIdeas.Model.Token.Token;
 import pl.qubiak.SubmitIdeas.Model.Users.AppUser;
 import pl.qubiak.SubmitIdeas.Repo.AppUserRepo;
+import pl.qubiak.SubmitIdeas.Repo.Dao.User;
 import pl.qubiak.SubmitIdeas.Repo.TokenRepo;
 import pl.qubiak.SubmitIdeas.Service.UserService;
 
@@ -22,6 +21,8 @@ public class UserController {
     private UserService userService;
     private AppUserRepo appUserRepo;
     private TokenRepo tokenRepo;
+    public User user;
+
 
     public UserController(UserService userService, AppUserRepo appUserRepo, TokenRepo tokenRepo) {
         this.userService = userService;
@@ -40,6 +41,7 @@ public class UserController {
         return "hello";
     }
 
+
     @GetMapping("/sing-up")
     public String singup(Model model) {
         model.addAttribute("user", new AppUser());
@@ -49,7 +51,7 @@ public class UserController {
     @PostMapping("/register")
     public String register(AppUser appUser) {
         userService.addUser(appUser);
-        return "sing-up";
+        return "register";
     }
 
     @GetMapping("/token")
@@ -59,6 +61,12 @@ public class UserController {
         appUser.setEnabled(true);
         appUserRepo.save(appUser);
         return "hello";
+    }
+
+    @RequestMapping("changeRoleToMod")
+    @ResponseBody
+    public void changeUserRole(@RequestParam int id) {
+        user.changeRoleToMod(id);
     }
 }
 

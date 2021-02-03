@@ -36,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/hello").authenticated()
                 .and()
-                .formLogin().defaultSuccessUrl("/hello");
+                .formLogin().defaultSuccessUrl("/hello" + //po zalogowaniu
+                "");
     }
 }
