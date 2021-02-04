@@ -2,13 +2,15 @@ package pl.qubiak.SubmitIdeas;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.qubiak.SubmitIdeas.Model.Ideas.Ideas;
 import pl.qubiak.SubmitIdeas.Model.Users.AppUser;
 import pl.qubiak.SubmitIdeas.Repo.AppUserRepo;
+import pl.qubiak.SubmitIdeas.Repo.IdeasRepo;
 
 @Configuration
 public class Start {
 
-    public Start(AppUserRepo appUserRepo, PasswordEncoder passwordEncoder) {
+    public Start(AppUserRepo appUserRepo, IdeasRepo ideasRepo, PasswordEncoder passwordEncoder) {
         AppUser appUserJanusz = new AppUser();
         appUserJanusz.setUsername("Janusz");
         appUserJanusz.setPassword(passwordEncoder.encode("Janusz123"));
@@ -41,5 +43,18 @@ public class Start {
         appUserRepo.save(appUserMirek);
         appUserRepo.save(appUserBogdan);
         appUserRepo.save(appUserKrzysiek);
+
+        Ideas ideas1 = new Ideas();
+        ideas1.setIdea("pierwszy pomysł");
+        ideas1.setAuthor("autor1");
+        ideas1.setAccepted(false);
+
+        Ideas ideas2 = new Ideas();
+        ideas2.setIdea("drugi pomysł");
+        ideas2.setAuthor("autor2");
+        ideas2.setAccepted(true);
+
+        ideasRepo.save(ideas1);
+        ideasRepo.save(ideas2);
     }
 }

@@ -47,4 +47,8 @@ public class UserService {
             e.printStackTrace();
         }
     }
+
+    private void getUsername(AppUser appUser) {
+        appUser.getUsername();
+    }
 }
