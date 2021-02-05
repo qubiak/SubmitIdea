@@ -22,13 +22,13 @@ user
         confirmed +
         -show unaccepted entries ("/getUnacceptedIdeas")
         -delete entries ("/deleteIdeaById")
-        -accepted entries
-        -banning users
+        -accepted entries ("/acceptedIdeas")
+   
 4) Admin
 
         mod +
         -delate users
-        -change User to Mod
+        -change User to Mod ("/changeRoleToMod")
 
 
 created by qubiak

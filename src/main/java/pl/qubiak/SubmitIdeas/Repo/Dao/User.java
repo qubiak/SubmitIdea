@@ -27,4 +27,9 @@ public class User {
         List<AppUser> allUsers = jdbcTemplate.query(sql, new pl.qubiak.SubmitIdeas.RowMapper.AppUser());
         return allUsers;
     }
+
+    public void deleteUser(int id) {
+        String sql = "DELETE FROM app_user WHERE id = ?";
+        jdbcTemplate.update(sql, new Object[]{id});
+    }
 }

@@ -31,12 +31,48 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+//endpointy przekierowują na formatkę login. Zalogowani mają dostęp do endpointów zgodnie ze specyfikacją.
+//czy obsługuje grupy endpointów /all/start musze napisac czy wystarczy /all?
+        http.csrf().disable();
+        http.headers().disable();
+        http.httpBasic().and().authorizeRequests()
+                .antMatchers("/all").hasAnyRole("USER", "MOD", "ADMIN")
+                .antMatchers("/mod").hasAnyRole("MOD", "ADMIN")
+                .antMatchers("/admin/all").hasRole("ADMIN");
+        http.authorizeRequests()
+                .antMatchers("/all").authenticated()
+                .antMatchers("/admin/all").authenticated()
+                .antMatchers("/mod").authenticated()
+                .and()
+                .formLogin().defaultSuccessUrl("/all/start")
+                .and()
+                .logout().permitAll();
+
+    }
+
+        /*
+        http.httpBasic().and().authorizeRequests()
+                .antMatchers("/all").permitAll()
+                .antMatchers("/mod").hasAnyRole("MOD", "ADMIN")
+                .antMatchers("/admin").hasRole("ADMIN")
+                .and()
+                .formLogin().permitAll().defaultSuccessUrl("/start" + "")
+                .and()
+                .logout().permitAll();
+
+
         http.csrf().disable();
         http.headers().disable();
         http.authorizeRequests()
-                .antMatchers("/hello").authenticated()
+                .antMatchers("/all").permitAll()
+                .antMatchers("/mod").hasAnyRole("MOD", "ADMIN")
+                .antMatchers("/admin").hasRole("ADMIN")
                 .and()
-                .formLogin().defaultSuccessUrl("/hello" + //po zalogowaniu
+                .formLogin().defaultSuccessUrl("/start" +
                 "");
     }
+
+         */
 }
+

@@ -35,11 +35,17 @@ public class Ideas {
         return ideas;
     }
 
-    public String delateIdea(int id) {
+    public void delateIdea(int id) {
         String sql = "DELETE FROM ideas WHERE id = ?";
         jdbcTemplate.update(sql, new Object[]{id});
-        return "delete idea with id: " + id;
     }
+
+    public void acceptIdeas(int id) {
+        String sql = "UPDATE ideas SET is_accepted = 1 WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+
 
 
 

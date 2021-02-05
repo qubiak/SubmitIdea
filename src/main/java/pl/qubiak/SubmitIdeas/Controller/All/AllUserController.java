@@ -1,4 +1,4 @@
-package pl.qubiak.SubmitIdeas.Controller;
+package pl.qubiak.SubmitIdeas.Controller.All;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,8 +18,9 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 
+@RequestMapping("/all")
 @Controller
-public class UserController {
+public class AllUserController {
 
     private UserService userService;
     private AppUserRepo appUserRepo;
@@ -30,22 +31,21 @@ public class UserController {
     public Ideas ideas;
 
 
-    public UserController(UserService userService, AppUserRepo appUserRepo, TokenRepo tokenRepo) {
+    public AllUserController(UserService userService, AppUserRepo appUserRepo, TokenRepo tokenRepo) {
         this.userService = userService;
         this.appUserRepo = appUserRepo;
         this.tokenRepo = tokenRepo;
-
     }
 
     //All
-    @GetMapping("/hello")
+    @GetMapping("/start")
     public String hello(Principal principal, Model model) {
         model.addAttribute("name", principal.getName());
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
         model.addAttribute("authorities", authorities);
         model.addAttribute("details", details);
-        return "hello";
+        return "start";
     }
 
     //ALL
@@ -70,50 +70,21 @@ public class UserController {
         return "hello";
     }
 
-    //ADMIN
-    @RequestMapping("/changeRoleToMod")
-    @ResponseBody
-    public void changeUserRole(@RequestParam int id) {
-        try {
-            user.changeRoleToMod(id);
-        } catch (NullPointerException e) {
-            System.out.println("No ID");
-            e.printStackTrace();
-        }
-    }
 
-    //ADMIN
-    @RequestMapping("/all")
-    @ResponseBody
-    public List<AppUser> allUsers() {
-        return user.allUsers();
-    }
-
-    @RequestMapping("/addIdeas")
-    @ResponseBody
-    public void addIdeas(
-            @RequestParam String idea,
-            @RequestParam String author) { //dodać zalogowanego autora
-        ideas.addIdeas(idea, author);
-    }
-
+    //ALL
     @RequestMapping("/getAcceptedIdeas")
     @ResponseBody
     public List<pl.qubiak.SubmitIdeas.Model.Ideas.Ideas> getAcceptedIdeas() {
         return ideas.getAcceptedIdeas();
     }
 
-    @RequestMapping("/getUnacceptedIdeas")
+    //ALL
+    @RequestMapping("/addIdeas")
     @ResponseBody
-    public List<pl.qubiak.SubmitIdeas.Model.Ideas.Ideas> getUnacceptedIdeas() {
-        return ideas.getUnacceptedIdeas();
-    }
-
-    @RequestMapping("/deleteIdeaById")
-    @ResponseBody
-    public void dwleteIdea(
-            @RequestParam int id) {
-        ideas.delateIdea(id);
+    public void addIdeas(
+            @RequestParam String idea,
+            @RequestParam String author) { //dodać zalogowanego autora
+        ideas.addIdeas(idea, author);
     }
 }
 
