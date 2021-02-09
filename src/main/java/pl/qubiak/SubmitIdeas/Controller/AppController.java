@@ -1,16 +1,13 @@
-package pl.qubiak.SubmitIdeas.Controller.All;
+package pl.qubiak.SubmitIdeas.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.qubiak.SubmitIdeas.Model.Token.Token;
 import pl.qubiak.SubmitIdeas.Model.Users.AppUser;
 import pl.qubiak.SubmitIdeas.Repo.AppUserRepo;
-import pl.qubiak.SubmitIdeas.Repo.Dao.Ideas;
-import pl.qubiak.SubmitIdeas.Repo.Dao.User;
+import pl.qubiak.SubmitIdeas.Repo.IdeasRepo;
 import pl.qubiak.SubmitIdeas.Repo.TokenRepo;
 import pl.qubiak.SubmitIdeas.Service.UserService;
 
@@ -18,26 +15,67 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 
-@RequestMapping("/all")
-@Controller
-public class AllUserController {
+@RestController
+public class AppController {
 
     private UserService userService;
     private AppUserRepo appUserRepo;
+    private IdeasRepo ideasRepo;
     private TokenRepo tokenRepo;
-    @Autowired
-    public User user;
-    @Autowired
-    public Ideas ideas;
 
-
-    public AllUserController(UserService userService, AppUserRepo appUserRepo, TokenRepo tokenRepo) {
+    public AppController(UserService userService, AppUserRepo appUserRepo, IdeasRepo ideasRepo, TokenRepo tokenRepo) {
         this.userService = userService;
         this.appUserRepo = appUserRepo;
+        this.ideasRepo = ideasRepo;
         this.tokenRepo = tokenRepo;
     }
 
-    //All
+    //ADMIN
+    @DeleteMapping("/deleteUser")
+    public String deleteUser(
+            @RequestParam Long id) {
+        appUserRepo.deleteById(id);
+        return "delete user with id: " + id;
+    }
+
+    //ADMIN
+    @PutMapping("/changeRoleToMod")
+    public void changeUserRole(@RequestParam Long id) {
+        try {
+            appUserRepo.update(id);
+        } catch (NullPointerException e) {
+            System.out.println("No ID");
+            e.printStackTrace();
+        }
+    }
+
+    //ADMIN
+    @GetMapping("/all")
+    public List<AppUser> allUsers() {
+        return appUserRepo.findAll();
+    }
+
+    //MOD
+    @GetMapping("/getUnacceptedIdeas")
+    public List<pl.qubiak.SubmitIdeas.Model.Ideas.Ideas> getUnacceptedIdeas() {
+        return ideasRepo.getUnAcceptedIdeas();
+    }
+
+    //MOD
+    @DeleteMapping("/deleteIdeaById")
+    public String deleteIdea(
+            @RequestParam Long id) {
+        ideasRepo.deleteById(id);
+        return "delete idea with id: " + id;
+    }
+
+    //MOD
+    @PutMapping("/acceptedIdeas")
+    public String acceptedIdeas(
+            @RequestParam Long id) {
+        ideasRepo.findById(id).get().setAccepted(true);
+        return "Accepted ideas with id: " + id;
+    }
     @GetMapping("/start")
     public String hello(Principal principal, Model model) {
         model.addAttribute("name", principal.getName());
@@ -72,19 +110,22 @@ public class AllUserController {
 
 
     //ALL
-    @RequestMapping("/getAcceptedIdeas")
-    @ResponseBody
+    @GetMapping("/getAcceptedIdeas")
     public List<pl.qubiak.SubmitIdeas.Model.Ideas.Ideas> getAcceptedIdeas() {
-        return ideas.getAcceptedIdeas();
+        return ideasRepo.getAcceptedIdeas();
+
     }
 
     //ALL
-    @RequestMapping("/addIdeas")
-    @ResponseBody
+    @PostMapping("/addIdeas")
     public void addIdeas(
             @RequestParam String idea,
             @RequestParam String author) { //dodać zalogowanego autora
-        ideas.addIdeas(idea, author);
+
+        pl.qubiak.SubmitIdeas.Model.Ideas.Ideas newIdea = new pl.qubiak.SubmitIdeas.Model.Ideas.Ideas();
+        newIdea.setIdea(idea);
+        newIdea.setAuthor(author);
+        newIdea.setAccepted(false);
+        ideasRepo.save(newIdea);
     }
 }
-
