@@ -14,10 +14,8 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
 
     Optional<AppUser> findByUsername(String username);
 
-
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE app_user a SET a.role = 'ROLE_MOD' WHERE a.id = :id")
-    void update(@Param("id") Long id);
-
+  //  @Modifying(clearAutomatically = true)
+  //  @Query("UPDATE app_user a SET a.role = 'ROLE_MOD' WHERE a.id = :id")
+  //  void update(@Param("id") Long id);
 }
 

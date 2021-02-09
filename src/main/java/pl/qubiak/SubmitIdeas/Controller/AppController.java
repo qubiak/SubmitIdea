@@ -1,9 +1,12 @@
 package pl.qubiak.SubmitIdeas.Controller;
 
+import net.bytebuddy.asm.Advice;
+import net.bytebuddy.implementation.bind.annotation.This;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.qubiak.SubmitIdeas.Model.Ideas.Ideas;
 import pl.qubiak.SubmitIdeas.Model.Token.Token;
 import pl.qubiak.SubmitIdeas.Model.Users.AppUser;
 import pl.qubiak.SubmitIdeas.Repo.AppUserRepo;
@@ -11,9 +14,11 @@ import pl.qubiak.SubmitIdeas.Repo.IdeasRepo;
 import pl.qubiak.SubmitIdeas.Repo.TokenRepo;
 import pl.qubiak.SubmitIdeas.Service.UserService;
 
+import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class AppController {
@@ -39,10 +44,15 @@ public class AppController {
     }
 
     //ADMIN
+    @Transactional
     @PutMapping("/changeRoleToMod")
     public void changeUserRole(@RequestParam Long id) {
         try {
-            appUserRepo.update(id);
+
+            Optional<AppUser> user1 = appUserRepo.findById(id);
+            user1.orElseThrow().setRole("ROLE_MOD");
+            //appUserRepo.save(user1);
+            //appUserRepo.update(id);
         } catch (NullPointerException e) {
             System.out.println("No ID");
             e.printStackTrace();
@@ -58,7 +68,7 @@ public class AppController {
     //MOD
     @GetMapping("/getUnacceptedIdeas")
     public List<pl.qubiak.SubmitIdeas.Model.Ideas.Ideas> getUnacceptedIdeas() {
-        return ideasRepo.getUnAcceptedIdeas();
+        return ideasRepo.findByAcceptedFalse();
     }
 
     //MOD
@@ -73,7 +83,7 @@ public class AppController {
     @PutMapping("/acceptedIdeas")
     public String acceptedIdeas(
             @RequestParam Long id) {
-        ideasRepo.findById(id).get().setAccepted(true);
+        ideasRepo.findById(id).get().setAccepted(true); // ??
         return "Accepted ideas with id: " + id;
     }
     @GetMapping("/start")
@@ -111,8 +121,8 @@ public class AppController {
 
     //ALL
     @GetMapping("/getAcceptedIdeas")
-    public List<pl.qubiak.SubmitIdeas.Model.Ideas.Ideas> getAcceptedIdeas() {
-        return ideasRepo.getAcceptedIdeas();
+    public List<Ideas> getAcceptedIdeas() {
+        return ideasRepo.findByAcceptedTrue();
 
     }
 
