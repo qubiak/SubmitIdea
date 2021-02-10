@@ -9,11 +9,12 @@ Application users are divided into:
    
     A user who has provided his data but has not yet confirmed it by e-mail
             
-        -login ("/login")
+        -register ("/sing-up")
 2) User confirmed
 
     User who can:
 
+        -login ("/login")
         -add an entry ("/addIdeas")
         -view accepted entries ("/getAcceptedIdeas")
 3) Mod

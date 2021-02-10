@@ -32,8 +32,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        http.csrf().disable();
+        http.headers().disable();
+        http.authorizeRequests()
+                .antMatchers("/hello").authenticated()
+                .and()
+                .formLogin().defaultSuccessUrl("/hello");
+    }
+
 //endpointy przekierowują na formatkę login. Zalogowani mają dostęp do endpointów zgodnie ze specyfikacją.
 //czy obsługuje grupy endpointów /all/start musze napisac czy wystarczy /all?
+
+        /*
         http.csrf().disable();
         http.headers().disable();
         http.httpBasic().and().authorizeRequests()
@@ -49,7 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().permitAll();
 
-    }
+         */
+
+
 
         /*
         http.httpBasic().and().authorizeRequests()

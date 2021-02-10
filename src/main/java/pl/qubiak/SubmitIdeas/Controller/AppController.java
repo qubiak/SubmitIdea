@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import pl.qubiak.SubmitIdeas.Model.Ideas.Ideas;
 import pl.qubiak.SubmitIdeas.Model.Token.Token;
 import pl.qubiak.SubmitIdeas.Model.Users.AppUser;
@@ -36,7 +37,7 @@ public class AppController {
     }
 
     //ADMIN
-    @DeleteMapping("/deleteUser")
+    @GetMapping("/deleteUser")
     public String deleteUser(
             @RequestParam Long id) {
         appUserRepo.deleteById(id);
@@ -45,14 +46,11 @@ public class AppController {
 
     //ADMIN
     @Transactional
-    @PutMapping("/changeRoleToMod")
+    @GetMapping("/changeRoleToMod")
     public void changeUserRole(@RequestParam Long id) {
         try {
-
             Optional<AppUser> user1 = appUserRepo.findById(id);
             user1.orElseThrow().setRole("ROLE_MOD");
-            //appUserRepo.save(user1);
-            //appUserRepo.update(id);
         } catch (NullPointerException e) {
             System.out.println("No ID");
             e.printStackTrace();
@@ -72,7 +70,7 @@ public class AppController {
     }
 
     //MOD
-    @DeleteMapping("/deleteIdeaById")
+    @GetMapping("/deleteIdeaById")
     public String deleteIdea(
             @RequestParam Long id) {
         ideasRepo.deleteById(id);
@@ -80,33 +78,33 @@ public class AppController {
     }
 
     //MOD
-    @PutMapping("/acceptedIdeas")
+    @Transactional
+    @GetMapping("/acceptedIdeas")
     public String acceptedIdeas(
             @RequestParam Long id) {
-        ideasRepo.findById(id).get().setAccepted(true); // ??
+        ideasRepo.findById(id).get().setAccepted(true);
         return "Accepted ideas with id: " + id;
     }
-    @GetMapping("/start")
-    public String hello(Principal principal, Model model) {
+    @GetMapping(value = "/hello")
+    public ModelAndView hello(Principal principal, Model model) {
         model.addAttribute("name", principal.getName());
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
         model.addAttribute("authorities", authorities);
         model.addAttribute("details", details);
-        return "start";
+        return new ModelAndView("hello");
     }
 
-    //ALL
-    @GetMapping("/sing-up")
-    public String singup(Model model) {
+    @GetMapping(value = "/sing-up")
+    public ModelAndView singup(Model model) {
         model.addAttribute("user", new AppUser());
-        return "sing-up";
+        return new ModelAndView("Sing-up");
     }
-    //ALL
-    @PostMapping("/register")
-    public String register(AppUser appUser) {
+
+    @GetMapping(value = "/register")
+    public ModelAndView register(AppUser appUser) {
         userService.addUser(appUser);
-        return "register";
+        return new ModelAndView("Sing-up");
     }
 
     @GetMapping("/token")
@@ -118,7 +116,6 @@ public class AppController {
         return "hello";
     }
 
-
     //ALL
     @GetMapping("/getAcceptedIdeas")
     public List<Ideas> getAcceptedIdeas() {
@@ -127,8 +124,8 @@ public class AppController {
     }
 
     //ALL
-    @PostMapping("/addIdeas")
-    public void addIdeas(
+    @GetMapping("/addIdeas")
+    public String addIdeas(
             @RequestParam String idea,
             @RequestParam String author) { //dodać zalogowanego autora
 
@@ -137,5 +134,6 @@ public class AppController {
         newIdea.setAuthor(author);
         newIdea.setAccepted(false);
         ideasRepo.save(newIdea);
+        return "Przesłany pomysł to: '" + idea + "' Autor: " + author;
     }
 }

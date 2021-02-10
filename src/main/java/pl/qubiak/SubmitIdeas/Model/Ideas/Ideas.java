@@ -10,16 +10,16 @@ public class Ideas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String idea;
     private String author;
-    private boolean isAccepted;
+    private boolean accepted;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -40,10 +40,10 @@ public class Ideas {
     }
 
     public boolean isAccepted() {
-        return isAccepted;
+        return accepted;
     }
 
     public void setAccepted(boolean accepted) {
-        isAccepted = accepted;
+        this.accepted = accepted;
     }
 }
