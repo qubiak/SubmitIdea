@@ -10,6 +10,5 @@ import java.util.List;
 public interface IdeasRepo extends JpaRepository<Ideas, Long> {
 
     List<Ideas> findByAcceptedTrue();
-
     List<Ideas> findByAcceptedFalse();
 }

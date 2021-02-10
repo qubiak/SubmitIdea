@@ -35,56 +35,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.headers().disable();
         http.authorizeRequests()
-                .antMatchers("/hello").authenticated()
+                .antMatchers("/hello").authenticated() //USER
+                .antMatchers("/getAcceptedIdeas").authenticated() //USER
+                .antMatchers("/addIdeas").authenticated() //USER
+                .antMatchers("/getUnacceptedIdeas").authenticated() //MOD
+                .antMatchers("/deleteIdeaById").authenticated() //MOD
+                .antMatchers("/acceptedIdeas").authenticated() //MOD
+                .antMatchers("/deleteUser").authenticated() //ADMIN
+                .antMatchers("/changeRoleToMod").authenticated() //ADMIN
+                .antMatchers("/all").authenticated() //ADMIN
                 .and()
                 .formLogin().defaultSuccessUrl("/hello");
-    }
-
-//endpointy przekierowują na formatkę login. Zalogowani mają dostęp do endpointów zgodnie ze specyfikacją.
-//czy obsługuje grupy endpointów /all/start musze napisac czy wystarczy /all?
-
-        /*
-        http.csrf().disable();
-        http.headers().disable();
         http.httpBasic().and().authorizeRequests()
-                .antMatchers("/all").hasAnyRole("USER", "MOD", "ADMIN")
-                .antMatchers("/mod").hasAnyRole("MOD", "ADMIN")
-                .antMatchers("/admin/all").hasRole("ADMIN");
-        http.authorizeRequests()
-                .antMatchers("/all").authenticated()
-                .antMatchers("/admin/all").authenticated()
-                .antMatchers("/mod").authenticated()
-                .and()
-                .formLogin().defaultSuccessUrl("/all/start")
+                .antMatchers("/hello").hasAnyRole("USER", "MOD", "ADMIN")
+                .antMatchers("/getAcceptedIdeas").hasAnyRole("USER", "MOD", "ADMIN")
+                .antMatchers("/addIdeas").hasAnyRole("USER", "MOD", "ADMIN")
+                .antMatchers("/getUnacceptedIdeas").hasAnyRole("MOD", "ADMIN")
+                .antMatchers("/deleteIdeaById").hasAnyRole("MOD", "ADMIN")
+                .antMatchers("/acceptedIdeas").hasAnyRole("MOD", "ADMIN")
+                .antMatchers("/deleteUser").hasRole("ADMIN")
+                .antMatchers("/changeRoleToMod").hasRole("ADMIN")
+                .antMatchers("/all").hasRole("ADMIN")
                 .and()
                 .logout().permitAll();
-
-         */
-
-
-
-        /*
-        http.httpBasic().and().authorizeRequests()
-                .antMatchers("/all").permitAll()
-                .antMatchers("/mod").hasAnyRole("MOD", "ADMIN")
-                .antMatchers("/admin").hasRole("ADMIN")
-                .and()
-                .formLogin().permitAll().defaultSuccessUrl("/start" + "")
-                .and()
-                .logout().permitAll();
-
-
-        http.csrf().disable();
-        http.headers().disable();
-        http.authorizeRequests()
-                .antMatchers("/all").permitAll()
-                .antMatchers("/mod").hasAnyRole("MOD", "ADMIN")
-                .antMatchers("/admin").hasRole("ADMIN")
-                .and()
-                .formLogin().defaultSuccessUrl("/start" +
-                "");
     }
-
-         */
 }
-

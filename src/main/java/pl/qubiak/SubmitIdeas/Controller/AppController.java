@@ -1,7 +1,5 @@
 package pl.qubiak.SubmitIdeas.Controller;
 
-import net.bytebuddy.asm.Advice;
-import net.bytebuddy.implementation.bind.annotation.This;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
@@ -85,6 +83,7 @@ public class AppController {
         ideasRepo.findById(id).get().setAccepted(true);
         return "Accepted ideas with id: " + id;
     }
+
     @GetMapping(value = "/hello")
     public ModelAndView hello(Principal principal, Model model) {
         model.addAttribute("name", principal.getName());
@@ -98,13 +97,13 @@ public class AppController {
     @GetMapping(value = "/sing-up")
     public ModelAndView singup(Model model) {
         model.addAttribute("user", new AppUser());
-        return new ModelAndView("Sing-up");
+        return new ModelAndView("singUp");
     }
 
     @GetMapping(value = "/register")
     public ModelAndView register(AppUser appUser) {
         userService.addUser(appUser);
-        return new ModelAndView("Sing-up");
+        return new ModelAndView("singUp");
     }
 
     @GetMapping("/token")
@@ -125,15 +124,14 @@ public class AppController {
 
     //ALL
     @GetMapping("/addIdeas")
-    public String addIdeas(
-            @RequestParam String idea,
-            @RequestParam String author) { //dodać zalogowanego autora
+    public String addIdeas(Principal principal,
+            @RequestParam String idea) {
 
         pl.qubiak.SubmitIdeas.Model.Ideas.Ideas newIdea = new pl.qubiak.SubmitIdeas.Model.Ideas.Ideas();
         newIdea.setIdea(idea);
-        newIdea.setAuthor(author);
+        newIdea.setAuthor(principal.getName());
         newIdea.setAccepted(false);
         ideasRepo.save(newIdea);
-        return "Przesłany pomysł to: '" + idea + "' Autor: " + author;
+        return "Przesłany pomysł to: '" + idea + "' Autor: " + principal.getName();
     }
 }

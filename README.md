@@ -28,7 +28,8 @@ user
 4) Admin
 
         mod +
-        -delate users
+        -delate users ("/deleteUser")
+        -see all users ("/all")
         -change User to Mod ("/changeRoleToMod")
 
 

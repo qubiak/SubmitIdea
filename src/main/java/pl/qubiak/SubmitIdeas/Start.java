@@ -45,13 +45,13 @@ public class Start {
         appUserRepo.save(appUserKrzysiek);
 
         Ideas ideas1 = new Ideas();
-        ideas1.setIdea("pierwszy pomysł");
-        ideas1.setAuthor("autor1");
+        ideas1.setIdea("Facebook");
+        ideas1.setAuthor("Mark Zuckerberg");
         ideas1.setAccepted(false);
 
         Ideas ideas2 = new Ideas();
-        ideas2.setIdea("drugi pomysł");
-        ideas2.setAuthor("autor2");
+        ideas2.setIdea("SpaceX");
+        ideas2.setAuthor("Elon Musk");
         ideas2.setAccepted(true);
 
         ideasRepo.save(ideas1);
